@@ -49,4 +49,30 @@
   function showError(error) {
     alert('An error occurred: ' + error.message);
   }
+  function displayData(dataJson) {
+    const data = JSON.parse(dataJson);
+    const container = document.getElementById('data-container');
+    const totalUsersElement = document.getElementById('total-users'); // เพิ่มส่วนนี้
+
+    container.innerHTML = ''; // ล้างข้อมูลเดิม
+    
+    // อัปเดต Total Users Card
+    totalUsersElement.textContent = data.length; 
+
+    data.forEach((row, index) => { // ใช้ index เพื่อเป็น key ในการอ้างอิง
+      const rowElement = document.createElement('tr');
+      rowElement.className = 'bg-white hover:bg-gray-50 transition duration-100';
+      rowElement.innerHTML = `
+        <td class="px-6 py-4 whitespace-nowrap">${row[0]}</td>
+        <td class="px-6 py-4 whitespace-nowrap">${row[1]}</td>
+        <td class="px-6 py-4 whitespace-nowrap">${new Date(row[2]).toLocaleDateString()}</td>
+        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+          <a href="#" class="text-indigo-600 hover:text-indigo-900 mr-3">Edit</a>
+          <a href="#" class="text-red-600 hover:text-red-900">Delete</a>
+        </td>
+      `;
+      container.appendChild(rowElement);
+    });
+  }
+  
 </script>
