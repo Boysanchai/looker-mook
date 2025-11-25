@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Responsive Admin Panel with Looker Studio</title>
+    <title>Responsive Admin Panel with Modal</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         /* 1. CSS สำหรับการเปลี่ยนภาพเคลื่อนไหว (Transition) ให้ดูนุ่มนวล */
@@ -26,6 +26,10 @@
         .sidebar-mobile-closed {
             transform: translateX(-100%);
         }
+        /* 3. Modal transition effect */
+        .modal {
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
     </style>
 </head>
 <body class="bg-gray-100">
@@ -38,16 +42,16 @@
             </div>
             
             <nav class="mt-4">
-                <a href="#" class="flex items-center p-4 text-gray-300 hover:bg-gray-700 hover:text-white transition duration-200 group">
+                <a href="#" id="open-dashboard-modal" class="flex items-center p-4 text-gray-300 hover:bg-gray-700 hover:text-white transition duration-200 group">
                     <span class="icon" style="-webkit-mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 15.5V13H7v-2h4V6.5l6 5-6 5z"/></svg>'); mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 15.5V13H7v-2h4V6.5l6 5-6 5z"/></svg>');"></span>
-                    <span class="menu-text">Dashboard</span>
+                    <span class="menu-text">Dashboard (Show Preview)</span>
                 </a>
                 <a href="#" class="flex items-center p-4 text-gray-300 hover:bg-gray-700 hover:text-white transition duration-200 group">
                     <span class="icon" style="-webkit-mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>'); mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>');"></span>
                     <span class="menu-text">Users</span>
                 </a>
                 <a href="#" class="flex items-center p-4 text-gray-300 hover:bg-gray-700 hover:text-white transition duration-200 group">
-                    <span class="icon" style="-webkit-mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white"><path d="M19.43 12.98c.04-.32.07-.64.07-.98s-.03-.66-.07-.98l2.11-1.65c.19-.15.24-.42.12-.64l-2-3.46c-.12-.22-.39-.31-.61-.22l-2.49 1.01c-.52-.39-1.09-.72-1.71-.97l-.37-2.65H11c-.28 0-.5.22-.5.5v3.42c-.62.25-1.19.58-1.71.97l-2.49-1.01c-.22-.09-.49 0-.61.22l-2 3.46c-.12.22-.07.49.12.64l2.11 1.65c-.04.32-.07.64-.07.98s.03.66.07.98l-2.11 1.65c-.19.15-.24.42-.12.64l2 3.46c.12.22.39.31.61.22l2.49-1.01c.52.39 1.09.72 1.71.97l.37 2.65h3.98c.28 0 .5-.22.5-.5v-3.42c.62-.25 1.19-.58 1.71-.97l2.49 1.01c.22.09.49 0 .61-.22l2-3.46c.12-.22.07-.49-.12-.64l-2.11-1.65zM12 15.5c-1.93 0-3.5-1.57-3.5-3.5s1.57-3.5 3.5-3.5 3.5 1.57 3.5 3.5-1.57 3.5-3.5 3.5z"/></svg>'); mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white"><path d="M19.43 12.98c.04-.32.07-.64.07-.98s-.03-.66-.07-.98l2.11-1.65c.19-.15.24-.42.12-.64l-2-3.46c-.12-.22-.39-.31-.61-.22l-2.49 1.01c-.52-.39-1.09-.72-1.71-.97l-.37-2.65H11c-.28 0-.5.22-.5.5v3.42c-.62.25-1.19.58-1.71.97l-2.49-1.01c-.22-.09-.49 0-.61.22l-2 3.46c-.12.22-.07.49.12.64l2.11 1.65c-.04.32-.07.64-.07.98s.03.66.07.98l-2.11 1.65c-.19.15-.24.42-.12.64l2 3.46c.12.22.39.31.61.22l2.49-1.01c.52.39 1.09.72 1.71.97l.37 2.65h3.98c.28 0 .5-.22.5-.5v-3.42c.62-.25 1.19-.58 1.71-.97l2.49 1.01c.22.09.49 0 .61-.22l2-3.46c.12-.22.07-.49-.12-.64l-2.11-1.65zM12 15.5c-1.93 0-3.5-1.57-3.5-3.5s1.57-3.5 3.5-3.5 3.5 1.57 3.5 3.5-1.57 3.5-3.5 3.5z"/></svg>');"></span>
+                    <span class="icon" style="-webkit-mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white"><path d="M19.43 12.98c.04-.32.07-.64.07-.98s-.03-.66-.07-.98l2.11-1.65c.19-.15.24-.42.12-.64l-2-3.46c-.12-.22-.39-.31-.61-.22l-2.49 1.01c-.52-.39-1.09-.72-1.71-.97l-.37-2.65H11c-.28 0-.5.22-.5.5v3.42c-.62.25-1.19.58-1.71.97l-2.49-1.01c-.22-.09-.49 0-.61.22l-2 3.46c-.12.22-.07.49.12.64l2.11 1.65c-.04.32-.07.64-.07.98s.03.66.07.98l-2.11 1.65c-.19.15-.24.42-.12.64l2 3.46c.12.22.39.31.61.22l2.49-1.01c.52.39 1.09.72 1.71.97l.37 2.65h3.98c.28 0 .5-.22.5-.5v-3.42c.62-.25 1.19-.58 1.71-.97l2.49 1.01c.22.09.49 0 .61-.22l2-3.46c.12-.22.07-.49-.12-.64l-2.11-1.65zM12 15.5c-1.93 0-3.5-1.57-3.5-3.5s1.57-3.5 3.5-3.5 3.5 1.57 3.5 3.5-1.57 3.5-3.5 3.5z"/></svg>');"></span>
                     <span class="menu-text">Settings</span>
                 </a>
             </nav>
@@ -63,14 +67,7 @@
                 <h1 class="text-xl font-bold text-gray-800 hidden md:block">Dashboard Analytics</h1>
                 
                 <div class="flex items-center space-x-4">
-                    <button class="text-gray-500 hover:text-indigo-500">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.472 6.136 6 8.358 6 11v3.159c0 .538-.214 1.055-.595 1.405L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path></svg>
-                    </button>
-                    <div class="flex items-center space-x-2 cursor-pointer">
-                        <span class="w-10 h-10 bg-indigo-500 rounded-full flex items-center justify-center text-white font-bold">A</span>
-                        <span class="text-gray-700 font-medium hidden sm:block">Admin User</span>
                     </div>
-                </div>
             </header>
 
             <main class="flex-1 overflow-x-hidden overflow-y-auto p-6 bg-gray-100">
@@ -78,11 +75,8 @@
                 
                 <div class="bg-white p-6 rounded-xl shadow-lg">
                     <h2 class="text-2xl font-semibold text-gray-800 mb-4 border-b pb-2">Looker Studio Report</h2>
-                    
                     <div class="mb-6 border p-4 rounded-lg bg-gray-50">
-                        
                         <h3 class="text-lg font-medium text-gray-700 mb-3">Report: Overview Data</h3>
-                        
                         <div class="w-full" style="height: 500px;">
                             <iframe 
                                 width="100%" 
@@ -102,6 +96,33 @@
         <div id="sidebar-overlay" class="fixed inset-0 bg-black opacity-0 transition-opacity duration-300 hidden lg:hidden z-20"></div>
     </div>
 
+    <div id="dashboard-preview-modal" class="modal fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-40 hidden">
+        <div class="bg-white rounded-xl shadow-2xl w-11/12 md:w-3/4 lg:w-1/2 max-h-[90vh] overflow-y-auto transform scale-95 transition-transform duration-300">
+            <div class="p-5 border-b flex justify-between items-center sticky top-0 bg-white z-10">
+                <h3 class="text-xl font-bold text-indigo-700">Dashboard Preview</h3>
+                <button id="close-modal" class="text-gray-500 hover:text-red-500 p-1 rounded-full hover:bg-gray-100">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
+            </div>
+            
+            <div class="p-5">
+                <h4 class="text-lg font-semibold mb-3">Snapshot of Dashboard Content</h4>
+                
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+                    <div class="bg-indigo-100 p-4 rounded-lg">
+                        <p class="text-sm font-medium text-indigo-700">Users</p>
+                        <p class="text-2xl font-bold text-indigo-900">1,234</p>
+                    </div>
+                    <div class="bg-green-100 p-4 rounded-lg">
+                        <p class="text-sm font-medium text-green-700">Orders</p>
+                        <p class="text-2xl font-bold text-green-900">45</p>
+                    </div>
+                </div>
+
+                <p class="text-gray-600">This is a quick preview loaded on click. You can add images, charts, or detailed summaries here.</p>
+            </div>
+        </div>
+    </div>
     <script>
         const sidebar = document.getElementById('sidebar');
         const toggleButton = document.getElementById('sidebar-toggle');
@@ -111,20 +132,21 @@
         const toggleIconOpen = document.getElementById('toggle-icon-open');
         const toggleIconClose = document.getElementById('toggle-icon-close');
         
+        // Modal Elements
+        const openModalButton = document.getElementById('open-dashboard-modal');
+        const closeModalButton = document.getElementById('close-modal');
+        const modal = document.getElementById('dashboard-preview-modal');
+        
         let isSidebarExpanded = true; 
 
+        // --- Sidebar Functions (เหมือนเดิม) ---
         function toggleDesktopSidebar() {
             sidebar.classList.toggle('w-64');
             sidebar.classList.toggle('w-20');
-            
-            menuTexts.forEach(text => {
-                text.classList.toggle('hidden');
-            });
+            menuTexts.forEach(text => { text.classList.toggle('hidden'); });
             logoText.classList.toggle('hidden');
-            
             toggleIconOpen.classList.toggle('hidden');
             toggleIconClose.classList.toggle('hidden');
-
             isSidebarExpanded = !isSidebarExpanded;
         }
         
@@ -132,7 +154,6 @@
             sidebar.classList.toggle('sidebar-mobile-closed');
             overlay.classList.toggle('hidden');
             overlay.classList.toggle('opacity-50');
-            
             const isClosed = sidebar.classList.contains('sidebar-mobile-closed');
             if (isClosed) {
                 toggleIconClose.classList.add('hidden');
@@ -142,7 +163,21 @@
                 toggleIconClose.classList.remove('hidden');
             }
         }
+        
+        // --- Modal Functions (ใหม่) ---
+        function openModal() {
+            modal.classList.remove('hidden');
+            document.body.classList.add('overflow-hidden'); // ป้องกันการ Scroll ด้านหลัง
+        }
 
+        function closeModal() {
+            modal.classList.add('hidden');
+            document.body.classList.remove('overflow-hidden');
+        }
+
+        // --- Event Listeners ---
+        
+        // 1. Sidebar Toggle Listener
         toggleButton.addEventListener('click', () => {
             if (window.innerWidth >= 1024) {
                 toggleDesktopSidebar();
@@ -153,6 +188,34 @@
         
         overlay.addEventListener('click', toggleMobileSidebar);
         
+        // 2. Modal Listener
+        openModalButton.addEventListener('click', (e) => {
+            e.preventDefault(); // ป้องกันการเปลี่ยนหน้า
+            openModal();
+            
+            // หากเป็นมือถือ ให้ปิด Sidebar ทันทีหลังเปิด Modal
+            if (window.innerWidth < 1024 && !sidebar.classList.contains('sidebar-mobile-closed')) {
+                toggleMobileSidebar();
+            }
+        });
+
+        closeModalButton.addEventListener('click', closeModal);
+
+        // ปิด Modal เมื่อคลิกนอก Modal (Overlay)
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                closeModal();
+            }
+        });
+
+        // ปิด Modal เมื่อกดปุ่ม ESC
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && !modal.classList.contains('hidden')) {
+                closeModal();
+            }
+        });
+
+        // 3. Resize Listener (เหมือนเดิม)
         window.addEventListener('resize', () => {
             if (window.innerWidth >= 1024) {
                 sidebar.classList.remove('sidebar-mobile-closed');
