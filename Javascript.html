@@ -1,0 +1,52 @@
+<script>
+  // ฟังก์ชันสำหรับโหลดข้อมูลเมื่อหน้าเว็บโหลดเสร็จ
+  document.addEventListener('DOMContentLoaded', loadData);
+
+  function loadData() {
+    // โหลดข้อมูลจาก Back-end (Code.gs)
+    google.script.run
+        .withSuccessHandler(displayData) // เมื่อสำเร็จ
+        .withFailureHandler(showError)   // เมื่อล้มเหลว
+        .getData();
+  }
+
+  function displayData(dataJson) {
+    const data = JSON.parse(dataJson);
+    const container = document.getElementById('data-container');
+    container.innerHTML = ''; // ล้างข้อมูลเดิม
+
+    data.forEach(row => {
+      const rowElement = document.createElement('tr');
+      rowElement.className = 'bg-white border-b hover:bg-gray-50';
+      rowElement.innerHTML = `
+        <td class="px-6 py-4">${row[0]}</td>
+        <td class="px-6 py-4">${row[1]}</td>
+        <td class="px-6 py-4">${row[2]}</td>
+      `;
+      container.appendChild(rowElement);
+    });
+  }
+
+  function handleSubmit(event) {
+    event.preventDefault();
+    const form = event.target;
+    const formData = {
+      name: form.name.value,
+      email: form.email.value
+    };
+
+    // ส่งข้อมูลไปบันทึกที่ Back-end
+    google.script.run
+        .withSuccessHandler(response => {
+          alert(response);
+          form.reset();
+          loadData(); // โหลดข้อมูลใหม่
+        })
+        .withFailureHandler(showError)
+        .saveData(formData);
+  }
+
+  function showError(error) {
+    alert('An error occurred: ' + error.message);
+  }
+</script>
