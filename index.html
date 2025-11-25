@@ -1,236 +1,583 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Responsive Admin Panel with Modal</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        /* 1. CSS สำหรับการเปลี่ยนภาพเคลื่อนไหว (Transition) ให้ดูนุ่มนวล */
-        .sidebar {
-            transition: width 0.3s ease, transform 0.3s ease;
-        }
-        .icon {
-            display: inline-block;
-            width: 1.25em;
-            height: 1.25em;
-            vertical-align: middle;
-            margin-right: 0.5rem;
-            background-color: currentColor;
-            -webkit-mask: no-repeat center;
-            mask: no-repeat center;
-            -webkit-mask-size: 100%;
-            mask-size: 100%;
-        }
-        /* 2. Custom utility class สำหรับการซ่อน/เปิด Sidebar บนมือถือ */
-        .sidebar-mobile-closed {
-            transform: translateX(-100%);
-        }
-        /* 3. Modal transition effect */
-        .modal {
-            transition: opacity 0.3s ease, visibility 0.3s ease;
-        }
-    </style>
-</head>
-<body class="bg-gray-100">
+<!doctype html>
+<html lang="th">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard</title>
+  <script src="/_sdk/element_sdk.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    }
+    
+    * {
+      box-sizing: border-box;
+    }
 
-    <div class="flex h-screen">
-        <aside id="sidebar" class="sidebar w-64 bg-gray-900 text-white flex-shrink-0 absolute lg:relative z-30 h-full sidebar-mobile-closed lg:translate-x-0">
-            
-            <div class="p-6 text-2xl font-semibold border-b border-gray-700 overflow-hidden">
-                <span id="logo-text">Admin <span class="text-indigo-400">Panel</span></span>
-            </div>
-            
-            <nav class="mt-4">
-                <a href="#" id="open-dashboard-modal" class="flex items-center p-4 text-gray-300 hover:bg-gray-700 hover:text-white transition duration-200 group">
-                    <span class="icon" style="-webkit-mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 15.5V13H7v-2h4V6.5l6 5-6 5z"/></svg>'); mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 15.5V13H7v-2h4V6.5l6 5-6 5z"/></svg>');"></span>
-                    <span class="menu-text">Dashboard (Show Preview)</span>
-                </a>
-                <a href="#" class="flex items-center p-4 text-gray-300 hover:bg-gray-700 hover:text-white transition duration-200 group">
-                    <span class="icon" style="-webkit-mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>'); mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>');"></span>
-                    <span class="menu-text">Users</span>
-                </a>
-                <a href="#" class="flex items-center p-4 text-gray-300 hover:bg-gray-700 hover:text-white transition duration-200 group">
-                    <span class="icon" style="-webkit-mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white"><path d="M19.43 12.98c.04-.32.07-.64.07-.98s-.03-.66-.07-.98l2.11-1.65c.19-.15.24-.42.12-.64l-2-3.46c-.12-.22-.39-.31-.61-.22l-2.49 1.01c-.52-.39-1.09-.72-1.71-.97l-.37-2.65H11c-.28 0-.5.22-.5.5v3.42c-.62.25-1.19.58-1.71.97l-2.49-1.01c-.22-.09-.49 0-.61.22l-2 3.46c-.12.22-.07.49.12.64l2.11 1.65c-.04.32-.07.64-.07.98s.03.66.07.98l-2.11 1.65c-.19.15-.24.42-.12.64l2 3.46c.12.22.39.31.61.22l2.49-1.01c.52.39 1.09.72 1.71.97l.37 2.65h3.98c.28 0 .5-.22.5-.5v-3.42c.62-.25 1.19-.58 1.71-.97l2.49 1.01c.22.09.49 0 .61-.22l2-3.46c.12-.22.07-.49-.12-.64l-2.11-1.65zM12 15.5c-1.93 0-3.5-1.57-3.5-3.5s1.57-3.5 3.5-3.5 3.5 1.57 3.5 3.5-1.57 3.5-3.5 3.5z"/></svg>');"></span>
-                    <span class="menu-text">Settings</span>
-                </a>
-            </nav>
-        </aside>
+    .sidebar {
+      transition: all 0.3s ease;
+      position: fixed;
+      left: 0;
+      top: 0;
+      width: 260px;
+      height: 100%;
+      z-index: 1000;
+    }
 
-        <div id="main-container" class="flex-1 flex flex-col overflow-hidden">
-            <header class="bg-white shadow-md p-4 flex justify-between items-center z-10">
-                <button id="sidebar-toggle" class="text-gray-500 hover:text-indigo-500 p-2 rounded-full hover:bg-gray-100">
-                    <svg id="toggle-icon-open" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
-                    <svg id="toggle-icon-close" class="w-6 h-6 hidden lg:block" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
-                </button>
+    .sidebar.mobile-hidden {
+      transform: translateX(-100%);
+    }
 
-                <h1 class="text-xl font-bold text-gray-800 hidden md:block">Dashboard Analytics</h1>
-                
-                <div class="flex items-center space-x-4">
-                    </div>
-            </header>
+    .menu-item {
+      transition: all 0.2s ease;
+    }
 
-            <main class="flex-1 overflow-x-hidden overflow-y-auto p-6 bg-gray-100">
-                <h2 class="text-2xl font-bold text-gray-800 mb-6">Real-time Data Report</h2>
-                
-                <div class="bg-white p-6 rounded-xl shadow-lg">
-                    <h2 class="text-2xl font-semibold text-gray-800 mb-4 border-b pb-2">Looker Studio Report</h2>
-                    <div class="mb-6 border p-4 rounded-lg bg-gray-50">
-                        <h3 class="text-lg font-medium text-gray-700 mb-3">Report: Overview Data</h3>
-                        <div class="w-full" style="height: 500px;">
-                            <iframe 
-                                width="100%" 
-                                height="100%" 
-                                src="https://lookerstudio.google.com/embed/reporting/0f25b506-d942-4b03-ba8e-fa6e0fe34e4c/page/p_vogo9hpbyd" 
-                                frameborder="0" 
-                                style="border:0" 
-                                allowfullscreen 
-                                sandbox="allow-storage-access-by-user-activation allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox">
-                            </iframe>
-                        </div>
-                    </div>
-                </div>
-                </main>
+    .menu-item:hover {
+      transform: translateX(4px);
+    }
+
+    .stat-card {
+      transition: all 0.3s ease;
+    }
+
+    .stat-card:hover {
+      transform: translateY(-4px);
+    }
+
+    .chart-bar {
+      transition: all 0.5s ease;
+      transform-origin: bottom;
+    }
+
+    .mobile-header {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      background: #1e293b;
+      padding: 16px;
+      z-index: 999;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .menu-toggle {
+      background: none;
+      border: none;
+      color: white;
+      font-size: 24px;
+      cursor: pointer;
+      padding: 8px;
+    }
+
+    .overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0,0,0,0.5);
+      z-index: 999;
+    }
+
+    .overlay.active {
+      display: block;
+    }
+
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .animate-slide {
+      animation: slideIn 0.5s ease forwards;
+    }
+
+    .page-content {
+      display: none;
+    }
+
+    .page-content.active {
+      display: block;
+    }
+
+    @media (max-width: 768px) {
+      .sidebar {
+        transform: translateX(-100%);
+      }
+
+      .sidebar.active {
+        transform: translateX(0);
+      }
+
+      .mobile-header {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+      }
+
+      .main-content {
+        margin-left: 0 !important;
+        width: 100% !important;
+        padding: 16px !important;
+        margin-top: 64px;
+      }
+
+      .stat-cards-grid {
+        grid-template-columns: 1fr !important;
+      }
+
+      .charts-grid {
+        grid-template-columns: 1fr !important;
+      }
+    }
+  </style>
+  <style>@view-transition { navigation: auto; }</style>
+  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+ </head>
+ <body><!-- Mobile Header -->
+  <div class="mobile-header"><button class="menu-toggle" id="menuToggle">☰</button>
+   <h1 id="mobile-title" style="color: white; font-size: 18px; font-weight: 600; margin: 0;">Admin Panel</h1>
+  </div><!-- Overlay -->
+  <div class="overlay" id="overlay"></div>
+  <div id="app" class="w-full min-h-full" style="background: #f8fafc;"><!-- Sidebar -->
+   <aside class="sidebar" id="sidebar" style="background: #1e293b; padding: 24px 0;">
+    <div style="padding: 0 24px; margin-bottom: 32px;">
+     <h1 id="dashboard-title" style="font-size: 24px; font-weight: 700; color: #ffffff; margin: 0;">Admin Panel</h1>
+    </div>
+    <nav><a href="#dashboard" class="menu-item" data-page="dashboard" style="display: flex; align-items: center; padding: 12px 24px; color: #94a3b8; text-decoration: none; background: #334155;"> <span style="margin-right: 12px; font-size: 20px;">📊</span> <span style="font-size: 15px; font-weight: 500;">Dashboard</span> </a> <a href="#users" class="menu-item" data-page="users" style="display: flex; align-items: center; padding: 12px 24px; color: #94a3b8; text-decoration: none;"> <span style="margin-right: 12px; font-size: 20px;">👥</span> <span style="font-size: 15px; font-weight: 500;">Users</span> </a> <a href="#products" class="menu-item" data-page="products" style="display: flex; align-items: center; padding: 12px 24px; color: #94a3b8; text-decoration: none;"> <span style="margin-right: 12px; font-size: 20px;">📦</span> <span style="font-size: 15px; font-weight: 500;">Products</span> </a> <a href="#orders" class="menu-item" data-page="orders" style="display: flex; align-items: center; padding: 12px 24px; color: #94a3b8; text-decoration: none;"> <span style="margin-right: 12px; font-size: 20px;">🛒</span> <span style="font-size: 15px; font-weight: 500;">Orders</span> </a> <a href="#analytics" class="menu-item" data-page="analytics" style="display: flex; align-items: center; padding: 12px 24px; color: #94a3b8; text-decoration: none;"> <span style="margin-right: 12px; font-size: 20px;">📈</span> <span style="font-size: 15px; font-weight: 500;">Analytics</span> </a> <a href="#settings" class="menu-item" data-page="settings" style="display: flex; align-items: center; padding: 12px 24px; color: #94a3b8; text-decoration: none;"> <span style="margin-right: 12px; font-size: 20px;">⚙️</span> <span style="font-size: 15px; font-weight: 500;">Settings</span> </a>
+    </nav>
+   </aside><!-- Main Content -->
+   <main class="main-content" style="margin-left: 260px; width: calc(100% - 260px); padding: 32px;"><!-- Dashboard Page -->
+    <div id="page-dashboard" class="page-content active"><!-- Header -->
+     <header style="margin-bottom: 32px;">
+      <h2 id="welcome-message" style="font-size: 28px; font-weight: 700; color: #1e293b; margin: 0 0 8px 0;">Welcome back, Admin</h2>
+      <p style="font-size: 15px; color: #64748b; margin: 0;">Here's what's happening with your business today</p>
+     </header><!-- Stats Cards -->
+     <div class="stat-cards-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 24px; margin-bottom: 32px;">
+      <div class="stat-card" style="background: #ffffff; border-radius: 12px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+       <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 16px;"><span id="total-users-label" style="font-size: 14px; color: #64748b; font-weight: 500;">Total Users</span> <span style="font-size: 24px;">👤</span>
+       </div>
+       <div style="font-size: 32px; font-weight: 700; color: #1e293b; margin-bottom: 8px;">
+        12,543
+       </div>
+       <div style="font-size: 13px; color: #10b981;">
+        ↑ 12% from last month
+       </div>
+      </div>
+      <div class="stat-card" style="background: #ffffff; border-radius: 12px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+       <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 16px;"><span id="revenue-label" style="font-size: 14px; color: #64748b; font-weight: 500;">Revenue</span> <span style="font-size: 24px;">💰</span>
+       </div>
+       <div style="font-size: 32px; font-weight: 700; color: #1e293b; margin-bottom: 8px;">
+        $45,231
+       </div>
+       <div style="font-size: 13px; color: #10b981;">
+        ↑ 8% from last month
+       </div>
+      </div>
+      <div class="stat-card" style="background: #ffffff; border-radius: 12px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+       <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 16px;"><span id="orders-label" style="font-size: 14px; color: #64748b; font-weight: 500;">Orders</span> <span style="font-size: 24px;">📋</span>
+       </div>
+       <div style="font-size: 32px; font-weight: 700; color: #1e293b; margin-bottom: 8px;">
+        1,234
+       </div>
+       <div style="font-size: 13px; color: #ef4444;">
+        ↓ 3% from last month
+       </div>
+      </div>
+      <div class="stat-card" style="background: #ffffff; border-radius: 12px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+       <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 16px;"><span id="growth-label" style="font-size: 14px; color: #64748b; font-weight: 500;">Growth</span> <span style="font-size: 24px;">📊</span>
+       </div>
+       <div style="font-size: 32px; font-weight: 700; color: #1e293b; margin-bottom: 8px;">
+        +23.5%
+       </div>
+       <div style="font-size: 13px; color: #10b981;">
+        ↑ 5% from last month
+       </div>
+      </div>
+     </div><!-- Charts and Table Row -->
+     <div class="charts-grid" style="display: grid; grid-template-columns: 2fr 1fr; gap: 24px; margin-bottom: 32px;"><!-- Chart -->
+      <div style="background: #ffffff; border-radius: 12px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+       <h3 style="font-size: 18px; font-weight: 600; color: #1e293b; margin: 0 0 24px 0;">Monthly Revenue</h3>
+       <div style="display: flex; align-items: flex-end; justify-content: space-between; height: 200px; gap: 12px;">
+        <div class="chart-bar" style="flex: 1; background: linear-gradient(to top, #3b82f6, #60a5fa); border-radius: 8px 8px 0 0; height: 60%; position: relative;"><span style="position: absolute; top: -24px; left: 50%; transform: translateX(-50%); font-size: 12px; font-weight: 600; color: #64748b;">Jan</span>
         </div>
+        <div class="chart-bar" style="flex: 1; background: linear-gradient(to top, #3b82f6, #60a5fa); border-radius: 8px 8px 0 0; height: 75%;"><span style="position: absolute; top: -24px; left: 50%; transform: translateX(-50%); font-size: 12px; font-weight: 600; color: #64748b;">Feb</span>
+        </div>
+        <div class="chart-bar" style="flex: 1; background: linear-gradient(to top, #3b82f6, #60a5fa); border-radius: 8px 8px 0 0; height: 85%;"><span style="position: absolute; top: -24px; left: 50%; transform: translateX(-50%); font-size: 12px; font-weight: 600; color: #64748b;">Mar</span>
+        </div>
+        <div class="chart-bar" style="flex: 1; background: linear-gradient(to top, #3b82f6, #60a5fa); border-radius: 8px 8px 0 0; height: 70%;"><span style="position: absolute; top: -24px; left: 50%; transform: translateX(-50%); font-size: 12px; font-weight: 600; color: #64748b;">Apr</span>
+        </div>
+        <div class="chart-bar" style="flex: 1; background: linear-gradient(to top, #3b82f6, #60a5fa); border-radius: 8px 8px 0 0; height: 90%;"><span style="position: absolute; top: -24px; left: 50%; transform: translateX(-50%); font-size: 12px; font-weight: 600; color: #64748b;">May</span>
+        </div>
+        <div class="chart-bar" style="flex: 1; background: linear-gradient(to top, #3b82f6, #60a5fa); border-radius: 8px 8px 0 0; height: 100%;"><span style="position: absolute; top: -24px; left: 50%; transform: translateX(-50%); font-size: 12px; font-weight: 600; color: #64748b;">Jun</span>
+        </div>
+       </div>
+      </div><!-- Quick Stats -->
+      <div style="background: #ffffff; border-radius: 12px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+       <h3 style="font-size: 18px; font-weight: 600; color: #1e293b; margin: 0 0 24px 0;">Quick Stats</h3>
+       <div style="display: flex; flex-direction: column; gap: 20px;">
+        <div>
+         <div style="display: flex; justify-content: space-between; margin-bottom: 8px;"><span style="font-size: 14px; color: #64748b;">Conversion Rate</span> <span style="font-size: 14px; font-weight: 600; color: #1e293b;">3.2%</span>
+         </div>
+         <div style="width: 100%; height: 8px; background: #e2e8f0; border-radius: 4px; overflow: hidden;">
+          <div style="width: 32%; height: 100%; background: #10b981; border-radius: 4px;"></div>
+         </div>
+        </div>
+        <div>
+         <div style="display: flex; justify-content: space-between; margin-bottom: 8px;"><span style="font-size: 14px; color: #64748b;">Avg Order Value</span> <span style="font-size: 14px; font-weight: 600; color: #1e293b;">$127</span>
+         </div>
+         <div style="width: 100%; height: 8px; background: #e2e8f0; border-radius: 4px; overflow: hidden;">
+          <div style="width: 65%; height: 100%; background: #3b82f6; border-radius: 4px;"></div>
+         </div>
+        </div>
+        <div>
+         <div style="display: flex; justify-content: space-between; margin-bottom: 8px;"><span style="font-size: 14px; color: #64748b;">Customer Satisfaction</span> <span style="font-size: 14px; font-weight: 600; color: #1e293b;">4.8/5</span>
+         </div>
+         <div style="width: 100%; height: 8px; background: #e2e8f0; border-radius: 4px; overflow: hidden;">
+          <div style="width: 96%; height: 100%; background: #f59e0b; border-radius: 4px;"></div>
+         </div>
+        </div>
+       </div>
+      </div>
+     </div><!-- Recent Orders Table -->
+     <div style="background: #ffffff; border-radius: 12px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+      <h3 style="font-size: 18px; font-weight: 600; color: #1e293b; margin: 0 0 24px 0;">Recent Orders</h3>
+      <div style="overflow-x: auto;">
+       <table style="width: 100%; border-collapse: collapse;">
+        <thead>
+         <tr style="border-bottom: 2px solid #e2e8f0;">
+          <th style="text-align: left; padding: 12px; font-size: 13px; font-weight: 600; color: #64748b; text-transform: uppercase;">Order ID</th>
+          <th style="text-align: left; padding: 12px; font-size: 13px; font-weight: 600; color: #64748b; text-transform: uppercase;">Customer</th>
+          <th style="text-align: left; padding: 12px; font-size: 13px; font-weight: 600; color: #64748b; text-transform: uppercase;">Product</th>
+          <th style="text-align: left; padding: 12px; font-size: 13px; font-weight: 600; color: #64748b; text-transform: uppercase;">Amount</th>
+          <th style="text-align: left; padding: 12px; font-size: 13px; font-weight: 600; color: #64748b; text-transform: uppercase;">Status</th>
+         </tr>
+        </thead>
+        <tbody>
+         <tr style="border-bottom: 1px solid #f1f5f9;">
+          <td style="padding: 16px; font-size: 14px; color: #1e293b; font-weight: 500;">#ORD-001</td>
+          <td style="padding: 16px; font-size: 14px; color: #1e293b;">John Doe</td>
+          <td style="padding: 16px; font-size: 14px; color: #64748b;">MacBook Pro</td>
+          <td style="padding: 16px; font-size: 14px; color: #1e293b; font-weight: 600;">$2,499</td>
+          <td style="padding: 16px;"><span style="display: inline-block; padding: 4px 12px; background: #dcfce7; color: #166534; border-radius: 12px; font-size: 13px; font-weight: 500;">Completed</span></td>
+         </tr>
+         <tr style="border-bottom: 1px solid #f1f5f9;">
+          <td style="padding: 16px; font-size: 14px; color: #1e293b; font-weight: 500;">#ORD-002</td>
+          <td style="padding: 16px; font-size: 14px; color: #1e293b;">Jane Smith</td>
+          <td style="padding: 16px; font-size: 14px; color: #64748b;">iPhone 15 Pro</td>
+          <td style="padding: 16px; font-size: 14px; color: #1e293b; font-weight: 600;">$1,199</td>
+          <td style="padding: 16px;"><span style="display: inline-block; padding: 4px 12px; background: #fef3c7; color: #92400e; border-radius: 12px; font-size: 13px; font-weight: 500;">Pending</span></td>
+         </tr>
+         <tr style="border-bottom: 1px solid #f1f5f9;">
+          <td style="padding: 16px; font-size: 14px; color: #1e293b; font-weight: 500;">#ORD-003</td>
+          <td style="padding: 16px; font-size: 14px; color: #1e293b;">Mike Johnson</td>
+          <td style="padding: 16px; font-size: 14px; color: #64748b;">AirPods Pro</td>
+          <td style="padding: 16px; font-size: 14px; color: #1e293b; font-weight: 600;">$249</td>
+          <td style="padding: 16px;"><span style="display: inline-block; padding: 4px 12px; background: #dbeafe; color: #1e40af; border-radius: 12px; font-size: 13px; font-weight: 500;">Processing</span></td>
+         </tr>
+         <tr style="border-bottom: 1px solid #f1f5f9;">
+          <td style="padding: 16px; font-size: 14px; color: #1e293b; font-weight: 500;">#ORD-004</td>
+          <td style="padding: 16px; font-size: 14px; color: #1e293b;">Sarah Wilson</td>
+          <td style="padding: 16px; font-size: 14px; color: #64748b;">iPad Air</td>
+          <td style="padding: 16px; font-size: 14px; color: #1e293b; font-weight: 600;">$599</td>
+          <td style="padding: 16px;"><span style="display: inline-block; padding: 4px 12px; background: #dcfce7; color: #166534; border-radius: 12px; font-size: 13px; font-weight: 500;">Completed</span></td>
+         </tr>
+         <tr>
+          <td style="padding: 16px; font-size: 14px; color: #1e293b; font-weight: 500;">#ORD-005</td>
+          <td style="padding: 16px; font-size: 14px; color: #1e293b;">Tom Brown</td>
+          <td style="padding: 16px; font-size: 14px; color: #64748b;">Apple Watch</td>
+          <td style="padding: 16px; font-size: 14px; color: #1e293b; font-weight: 600;">$399</td>
+          <td style="padding: 16px;"><span style="display: inline-block; padding: 4px 12px; background: #fee2e2; color: #991b1b; border-radius: 12px; font-size: 13px; font-weight: 500;">Cancelled</span></td>
+         </tr>
+        </tbody>
+       </table>
+      </div>
+     </div>
+    </div><!-- End Dashboard Page --> <!-- Users Page -->
+    <div id="page-users" class="page-content">
+     <header style="margin-bottom: 32px;">
+      <h2 style="font-size: 28px; font-weight: 700; color: #1e293b; margin: 0 0 8px 0;">Users Management</h2>
+      <p style="font-size: 15px; color: #64748b; margin: 0;">View and analyze user data reports</p>
+     </header>
+     <div style="background: #ffffff; padding: 24px; rounded: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); border-radius: 12px;">
+      <h3 style="font-size: 20px; font-weight: 600; color: #1e293b; margin: 0 0 16px 0; border-bottom: 2px solid #e2e8f0; padding-bottom: 8px;">Looker Studio Report</h3>
+      <div style="margin-bottom: 24px; border: 1px solid #e2e8f0; padding: 16px; border-radius: 8px; background: #f8fafc;">
+       <h4 style="font-size: 16px; font-weight: 500; color: #475569; margin: 0 0 12px 0;">Report: Overview Data</h4>
+       <div style="width: 100%; height: 500px; border-radius: 8px; overflow: hidden;"><iframe width="100%" height="100%" src="https://lookerstudio.google.com/embed/reporting/0f25b506-d942-4b03-ba8e-fa6e0fe34e4c/page/p_vogo9hpbyd" frameborder="0" style="border:0" allowfullscreen sandbox="allow-storage-access-by-user-activation allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox"> </iframe>
+       </div>
+      </div>
+     </div>
+    </div><!-- End Users Page --> <!-- Products Page -->
+    <div id="page-products" class="page-content">
+     <header style="margin-bottom: 32px;">
+      <h2 style="font-size: 28px; font-weight: 700; color: #1e293b; margin: 0 0 8px 0;">Products</h2>
+      <p style="font-size: 15px; color: #64748b; margin: 0;">Manage your product inventory</p>
+     </header>
+     <div style="background: #ffffff; padding: 48px; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); text-align: center;">
+      <div style="font-size: 64px; margin-bottom: 16px;">
+       📦
+      </div>
+      <h3 style="font-size: 20px; color: #64748b; margin: 0;">Products page coming soon</h3>
+     </div>
+    </div><!-- Orders Page -->
+    <div id="page-orders" class="page-content">
+     <header style="margin-bottom: 32px;">
+      <h2 style="font-size: 28px; font-weight: 700; color: #1e293b; margin: 0 0 8px 0;">Orders</h2>
+      <p style="font-size: 15px; color: #64748b; margin: 0;">Track and manage orders</p>
+     </header>
+     <div style="background: #ffffff; padding: 48px; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); text-align: center;">
+      <div style="font-size: 64px; margin-bottom: 16px;">
+       🛒
+      </div>
+      <h3 style="font-size: 20px; color: #64748b; margin: 0;">Orders page coming soon</h3>
+     </div>
+    </div><!-- Analytics Page -->
+    <div id="page-analytics" class="page-content">
+     <header style="margin-bottom: 32px;">
+      <h2 style="font-size: 28px; font-weight: 700; color: #1e293b; margin: 0 0 8px 0;">Analytics</h2>
+      <p style="font-size: 15px; color: #64748b; margin: 0;">View detailed analytics</p>
+     </header>
+     <div style="background: #ffffff; padding: 48px; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); text-align: center;">
+      <div style="font-size: 64px; margin-bottom: 16px;">
+       📈
+      </div>
+      <h3 style="font-size: 20px; color: #64748b; margin: 0;">Analytics page coming soon</h3>
+     </div>
+    </div><!-- Settings Page -->
+    <div id="page-settings" class="page-content">
+     <header style="margin-bottom: 32px;">
+      <h2 style="font-size: 28px; font-weight: 700; color: #1e293b; margin: 0 0 8px 0;">Settings</h2>
+      <p style="font-size: 15px; color: #64748b; margin: 0;">Configure your admin panel</p>
+     </header>
+     <div style="background: #ffffff; padding: 48px; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); text-align: center;">
+      <div style="font-size: 64px; margin-bottom: 16px;">
+       ⚙️
+      </div>
+      <h3 style="font-size: 20px; color: #64748b; margin: 0;">Settings page coming soon</h3>
+     </div>
+    </div>
+   </main>
+  </div>
+  <script>
+    const defaultConfig = {
+      dashboard_title: "Admin Panel",
+      welcome_message: "Welcome back, Admin",
+      total_users_label: "Total Users",
+      revenue_label: "Revenue",
+      orders_label: "Orders",
+      growth_label: "Growth",
+      background_color: "#f8fafc",
+      sidebar_color: "#1e293b",
+      card_color: "#ffffff",
+      text_color: "#1e293b",
+      primary_color: "#3b82f6"
+    };
+
+    const element = {
+      defaultConfig,
+      
+      async onConfigChange(config) {
+        const dashboardTitle = document.getElementById('dashboard-title');
+        const welcomeMessage = document.getElementById('welcome-message');
+        const totalUsersLabel = document.getElementById('total-users-label');
+        const revenueLabel = document.getElementById('revenue-label');
+        const ordersLabel = document.getElementById('orders-label');
+        const growthLabel = document.getElementById('growth-label');
+
+        if (dashboardTitle) dashboardTitle.textContent = config.dashboard_title || defaultConfig.dashboard_title;
+        if (welcomeMessage) welcomeMessage.textContent = config.welcome_message || defaultConfig.welcome_message;
+        if (totalUsersLabel) totalUsersLabel.textContent = config.total_users_label || defaultConfig.total_users_label;
+        if (revenueLabel) revenueLabel.textContent = config.revenue_label || defaultConfig.revenue_label;
+        if (ordersLabel) ordersLabel.textContent = config.orders_label || defaultConfig.orders_label;
+        if (growthLabel) growthLabel.textContent = config.growth_label || defaultConfig.growth_label;
+
+        const app = document.getElementById('app');
+        if (app) app.style.background = config.background_color || defaultConfig.background_color;
+
+        const sidebar = document.querySelector('.sidebar');
+        if (sidebar) sidebar.style.background = config.sidebar_color || defaultConfig.sidebar_color;
+
+        const cards = document.querySelectorAll('.stat-card, main > div > div[style*="background: #ffffff"]');
+        cards.forEach(card => {
+          card.style.background = config.card_color || defaultConfig.card_color;
+        });
+
+        const textElements = document.querySelectorAll('h2, h3, td[style*="color: #1e293b"], div[style*="color: #1e293b"]');
+        textElements.forEach(el => {
+          if (el.style.color === 'rgb(30, 41, 59)' || el.style.color === '#1e293b') {
+            el.style.color = config.text_color || defaultConfig.text_color;
+          }
+        });
+
+        const chartBars = document.querySelectorAll('.chart-bar');
+        chartBars.forEach(bar => {
+          bar.style.background = `linear-gradient(to top, ${config.primary_color || defaultConfig.primary_color}, ${adjustColorBrightness(config.primary_color || defaultConfig.primary_color, 30)})`;
+        });
+      },
+
+      mapToCapabilities(config) {
+        return {
+          recolorables: [
+            {
+              get: () => config.background_color || defaultConfig.background_color,
+              set: (value) => {
+                config.background_color = value;
+                if (window.elementSdk) window.elementSdk.setConfig({ background_color: value });
+              }
+            },
+            {
+              get: () => config.sidebar_color || defaultConfig.sidebar_color,
+              set: (value) => {
+                config.sidebar_color = value;
+                if (window.elementSdk) window.elementSdk.setConfig({ sidebar_color: value });
+              }
+            },
+            {
+              get: () => config.card_color || defaultConfig.card_color,
+              set: (value) => {
+                config.card_color = value;
+                if (window.elementSdk) window.elementSdk.setConfig({ card_color: value });
+              }
+            },
+            {
+              get: () => config.text_color || defaultConfig.text_color,
+              set: (value) => {
+                config.text_color = value;
+                if (window.elementSdk) window.elementSdk.setConfig({ text_color: value });
+              }
+            },
+            {
+              get: () => config.primary_color || defaultConfig.primary_color,
+              set: (value) => {
+                config.primary_color = value;
+                if (window.elementSdk) window.elementSdk.setConfig({ primary_color: value });
+              }
+            }
+          ],
+          borderables: [],
+          fontEditable: undefined,
+          fontSizeable: undefined
+        };
+      },
+
+      mapToEditPanelValues(config) {
+        return new Map([
+          ["dashboard_title", config.dashboard_title || defaultConfig.dashboard_title],
+          ["welcome_message", config.welcome_message || defaultConfig.welcome_message],
+          ["total_users_label", config.total_users_label || defaultConfig.total_users_label],
+          ["revenue_label", config.revenue_label || defaultConfig.revenue_label],
+          ["orders_label", config.orders_label || defaultConfig.orders_label],
+          ["growth_label", config.growth_label || defaultConfig.growth_label]
+        ]);
+      }
+    };
+
+    function adjustColorBrightness(color, percent) {
+      const num = parseInt(color.replace("#", ""), 16);
+      const amt = Math.round(2.55 * percent);
+      const R = (num >> 16) + amt;
+      const G = (num >> 8 & 0x00FF) + amt;
+      const B = (num & 0x0000FF) + amt;
+      return "#" + (0x1000000 + (R < 255 ? R < 1 ? 0 : R : 255) * 0x10000 +
+        (G < 255 ? G < 1 ? 0 : G : 255) * 0x100 +
+        (B < 255 ? B < 1 ? 0 : B : 255))
+        .toString(16).slice(1);
+    }
+
+    // Initialize the SDK
+    if (window.elementSdk) {
+      window.elementSdk.init(element);
+    }
+
+    // Page navigation
+    function showPage(pageName) {
+      document.querySelectorAll('.page-content').forEach(page => {
+        page.classList.remove('active');
+      });
+      const targetPage = document.getElementById(`page-${pageName}`);
+      if (targetPage) {
+        targetPage.classList.add('active');
+      }
+      
+      // Update mobile header title
+      const titles = {
+        dashboard: 'Dashboard',
+        users: 'Users',
+        products: 'Products',
+        orders: 'Orders',
+        analytics: 'Analytics',
+        settings: 'Settings'
+      };
+      const mobileTitle = document.getElementById('mobile-title');
+      if (mobileTitle) {
+        mobileTitle.textContent = titles[pageName] || 'Admin Panel';
+      }
+    }
+
+    // Add menu click handlers
+    document.querySelectorAll('.menu-item').forEach(item => {
+      item.addEventListener('click', (e) => {
+        e.preventDefault();
         
-        <div id="sidebar-overlay" class="fixed inset-0 bg-black opacity-0 transition-opacity duration-300 hidden lg:hidden z-20"></div>
-    </div>
-
-    <div id="dashboard-preview-modal" class="modal fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-40 hidden">
-        <div class="bg-white rounded-xl shadow-2xl w-11/12 md:w-3/4 lg:w-1/2 max-h-[90vh] overflow-y-auto transform scale-95 transition-transform duration-300">
-            <div class="p-5 border-b flex justify-between items-center sticky top-0 bg-white z-10">
-                <h3 class="text-xl font-bold text-indigo-700">Dashboard Preview</h3>
-                <button id="close-modal" class="text-gray-500 hover:text-red-500 p-1 rounded-full hover:bg-gray-100">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-                </button>
-            </div>
-            
-            <div class="p-5">
-                <h4 class="text-lg font-semibold mb-3">Snapshot of Dashboard Content</h4>
-                
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
-                    <div class="bg-indigo-100 p-4 rounded-lg">
-                        <p class="text-sm font-medium text-indigo-700">Users</p>
-                        <p class="text-2xl font-bold text-indigo-900">1,234</p>
-                    </div>
-                    <div class="bg-green-100 p-4 rounded-lg">
-                        <p class="text-sm font-medium text-green-700">Orders</p>
-                        <p class="text-2xl font-bold text-green-900">45</p>
-                    </div>
-                </div>
-
-                <p class="text-gray-600">This is a quick preview loaded on click. You can add images, charts, or detailed summaries here.</p>
-            </div>
-        </div>
-    </div>
-    <script>
+        // Update active menu item
+        document.querySelectorAll('.menu-item').forEach(m => {
+          m.style.background = 'transparent';
+        });
+        item.style.background = '#334155';
+        
+        // Show the selected page
+        const pageName = item.dataset.page;
+        if (pageName) {
+          showPage(pageName);
+        }
+        
+        // Close mobile menu
         const sidebar = document.getElementById('sidebar');
-        const toggleButton = document.getElementById('sidebar-toggle');
-        const menuTexts = document.querySelectorAll('.menu-text');
-        const logoText = document.getElementById('logo-text');
-        const overlay = document.getElementById('sidebar-overlay');
-        const toggleIconOpen = document.getElementById('toggle-icon-open');
-        const toggleIconClose = document.getElementById('toggle-icon-close');
-        
-        // Modal Elements
-        const openModalButton = document.getElementById('open-dashboard-modal');
-        const closeModalButton = document.getElementById('close-modal');
-        const modal = document.getElementById('dashboard-preview-modal');
-        
-        let isSidebarExpanded = true; 
+        const overlay = document.getElementById('overlay');
+        if (sidebar) sidebar.classList.remove('active');
+        if (overlay) overlay.classList.remove('active');
+      });
+    });
 
-        // --- Sidebar Functions (เหมือนเดิม) ---
-        function toggleDesktopSidebar() {
-            sidebar.classList.toggle('w-64');
-            sidebar.classList.toggle('w-20');
-            menuTexts.forEach(text => { text.classList.toggle('hidden'); });
-            logoText.classList.toggle('hidden');
-            toggleIconOpen.classList.toggle('hidden');
-            toggleIconClose.classList.toggle('hidden');
-            isSidebarExpanded = !isSidebarExpanded;
-        }
-        
-        function toggleMobileSidebar() {
-            sidebar.classList.toggle('sidebar-mobile-closed');
-            overlay.classList.toggle('hidden');
-            overlay.classList.toggle('opacity-50');
-            const isClosed = sidebar.classList.contains('sidebar-mobile-closed');
-            if (isClosed) {
-                toggleIconClose.classList.add('hidden');
-                toggleIconOpen.classList.remove('hidden');
-            } else {
-                toggleIconOpen.classList.add('hidden');
-                toggleIconClose.classList.remove('hidden');
-            }
-        }
-        
-        // --- Modal Functions (ใหม่) ---
-        function openModal() {
-            modal.classList.remove('hidden');
-            document.body.classList.add('overflow-hidden'); // ป้องกันการ Scroll ด้านหลัง
-        }
+    // Mobile menu toggle
+    const menuToggle = document.getElementById('menuToggle');
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('overlay');
 
-        function closeModal() {
-            modal.classList.add('hidden');
-            document.body.classList.remove('overflow-hidden');
-        }
+    if (menuToggle) {
+      menuToggle.addEventListener('click', () => {
+        sidebar.classList.toggle('active');
+        overlay.classList.toggle('active');
+      });
+    }
 
-        // --- Event Listeners ---
-        
-        // 1. Sidebar Toggle Listener
-        toggleButton.addEventListener('click', () => {
-            if (window.innerWidth >= 1024) {
-                toggleDesktopSidebar();
-            } else {
-                toggleMobileSidebar();
-            }
-        });
-        
-        overlay.addEventListener('click', toggleMobileSidebar);
-        
-        // 2. Modal Listener
-        openModalButton.addEventListener('click', (e) => {
-            e.preventDefault(); // ป้องกันการเปลี่ยนหน้า
-            openModal();
-            
-            // หากเป็นมือถือ ให้ปิด Sidebar ทันทีหลังเปิด Modal
-            if (window.innerWidth < 1024 && !sidebar.classList.contains('sidebar-mobile-closed')) {
-                toggleMobileSidebar();
-            }
-        });
+    if (overlay) {
+      overlay.addEventListener('click', () => {
+        sidebar.classList.remove('active');
+        overlay.classList.remove('active');
+      });
+    }
 
-        closeModalButton.addEventListener('click', closeModal);
-
-        // ปิด Modal เมื่อคลิกนอก Modal (Overlay)
-        modal.addEventListener('click', (e) => {
-            if (e.target === modal) {
-                closeModal();
-            }
-        });
-
-        // ปิด Modal เมื่อกดปุ่ม ESC
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape' && !modal.classList.contains('hidden')) {
-                closeModal();
-            }
-        });
-
-        // 3. Resize Listener (เหมือนเดิม)
-        window.addEventListener('resize', () => {
-            if (window.innerWidth >= 1024) {
-                sidebar.classList.remove('sidebar-mobile-closed');
-                overlay.classList.add('hidden');
-                overlay.classList.remove('opacity-50');
-
-                if (isSidebarExpanded) {
-                    menuTexts.forEach(text => text.classList.remove('hidden'));
-                    logoText.classList.remove('hidden');
-                }
-            } else {
-                toggleIconClose.classList.add('hidden');
-                toggleIconOpen.classList.remove('hidden');
-            }
-        });
-    </script>
-</body>
+    // Animate cards on load
+    document.addEventListener('DOMContentLoaded', () => {
+      const cards = document.querySelectorAll('.stat-card');
+      cards.forEach((card, index) => {
+        card.classList.add('animate-slide');
+        card.style.animationDelay = `${index * 0.1}s`;
+      });
+    });
+  </script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9a41c406f497a18a',t:'MTc2NDA4MDIwNi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
