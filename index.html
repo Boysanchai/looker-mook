@@ -28,8 +28,31 @@
       z-index: 1000;
     }
 
+    .sidebar.collapsed {
+      width: 70px;
+    }
+
+    .sidebar.collapsed .sidebar-title,
+    .sidebar.collapsed .menu-text {
+      opacity: 0;
+      display: none;
+    }
+
+    .sidebar.collapsed .menu-item {
+      justify-content: center;
+    }
+
     .sidebar.mobile-hidden {
       transform: translateX(-100%);
+    }
+
+    .main-content {
+      transition: all 0.3s ease;
+    }
+
+    .main-content.collapsed {
+      margin-left: 70px !important;
+      width: calc(100% - 70px) !important;
     }
 
     .menu-item {
@@ -121,6 +144,14 @@
         transform: translateX(0);
       }
 
+      .sidebar.collapsed {
+        width: 260px;
+      }
+
+      #sidebarToggle {
+        display: none !important;
+      }
+
       .mobile-header {
         display: flex;
         align-items: center;
@@ -132,6 +163,11 @@
         width: 100% !important;
         padding: 16px !important;
         margin-top: 64px;
+      }
+
+      .main-content.collapsed {
+        margin-left: 0 !important;
+        width: 100% !important;
       }
 
       .stat-cards-grid {
@@ -153,10 +189,10 @@
   <div class="overlay" id="overlay"></div>
   <div id="app" class="w-full min-h-full" style="background: #f8fafc;"><!-- Sidebar -->
    <aside class="sidebar" id="sidebar" style="background: #1e293b; padding: 24px 0;">
-    <div style="padding: 0 24px; margin-bottom: 32px;">
-     <h1 id="dashboard-title" style="font-size: 24px; font-weight: 700; color: #ffffff; margin: 0;">Admin Panel</h1>
+    <div style="padding: 0 24px; margin-bottom: 32px; display: flex; justify-content: space-between; align-items: center;">
+     <h1 id="dashboard-title" class="sidebar-title" style="font-size: 24px; font-weight: 700; color: #ffffff; margin: 0; transition: all 0.3s;">Admin Panel</h1><button id="sidebarToggle" style="background: #334155; border: none; color: white; font-size: 20px; cursor: pointer; padding: 8px 12px; border-radius: 6px; transition: all 0.2s;">☰</button>
     </div>
-    <nav><a href="#dashboard" class="menu-item" data-page="dashboard" style="display: flex; align-items: center; padding: 12px 24px; color: #94a3b8; text-decoration: none; background: #334155;"> <span style="margin-right: 12px; font-size: 20px;">📊</span> <span style="font-size: 15px; font-weight: 500;">Dashboard</span> </a> <a href="#users" class="menu-item" data-page="users" style="display: flex; align-items: center; padding: 12px 24px; color: #94a3b8; text-decoration: none;"> <span style="margin-right: 12px; font-size: 20px;">👥</span> <span style="font-size: 15px; font-weight: 500;">Users</span> </a> <a href="#products" class="menu-item" data-page="products" style="display: flex; align-items: center; padding: 12px 24px; color: #94a3b8; text-decoration: none;"> <span style="margin-right: 12px; font-size: 20px;">📦</span> <span style="font-size: 15px; font-weight: 500;">Products</span> </a> <a href="#orders" class="menu-item" data-page="orders" style="display: flex; align-items: center; padding: 12px 24px; color: #94a3b8; text-decoration: none;"> <span style="margin-right: 12px; font-size: 20px;">🛒</span> <span style="font-size: 15px; font-weight: 500;">Orders</span> </a> <a href="#analytics" class="menu-item" data-page="analytics" style="display: flex; align-items: center; padding: 12px 24px; color: #94a3b8; text-decoration: none;"> <span style="margin-right: 12px; font-size: 20px;">📈</span> <span style="font-size: 15px; font-weight: 500;">Analytics</span> </a> <a href="#settings" class="menu-item" data-page="settings" style="display: flex; align-items: center; padding: 12px 24px; color: #94a3b8; text-decoration: none;"> <span style="margin-right: 12px; font-size: 20px;">⚙️</span> <span style="font-size: 15px; font-weight: 500;">Settings</span> </a>
+    <nav><a href="#dashboard" class="menu-item" data-page="dashboard" style="display: flex; align-items: center; padding: 12px 24px; color: #94a3b8; text-decoration: none; background: #334155;"> <span style="margin-right: 12px; font-size: 20px;">📊</span> <span class="menu-text" style="font-size: 15px; font-weight: 500; transition: all 0.3s;">Dashboard</span> </a> <a href="#users" class="menu-item" data-page="users" style="display: flex; align-items: center; padding: 12px 24px; color: #94a3b8; text-decoration: none;"> <span style="margin-right: 12px; font-size: 20px;">👥</span> <span class="menu-text" style="font-size: 15px; font-weight: 500; transition: all 0.3s;">Users</span> </a> <a href="#products" class="menu-item" data-page="products" style="display: flex; align-items: center; padding: 12px 24px; color: #94a3b8; text-decoration: none;"> <span style="margin-right: 12px; font-size: 20px;">📦</span> <span class="menu-text" style="font-size: 15px; font-weight: 500; transition: all 0.3s;">Products</span> </a> <a href="#orders" class="menu-item" data-page="orders" style="display: flex; align-items: center; padding: 12px 24px; color: #94a3b8; text-decoration: none;"> <span style="margin-right: 12px; font-size: 20px;">🛒</span> <span class="menu-text" style="font-size: 15px; font-weight: 500; transition: all 0.3s;">Orders</span> </a> <a href="#analytics" class="menu-item" data-page="analytics" style="display: flex; align-items: center; padding: 12px 24px; color: #94a3b8; text-decoration: none;"> <span style="margin-right: 12px; font-size: 20px;">📈</span> <span class="menu-text" style="font-size: 15px; font-weight: 500; transition: all 0.3s;">Analytics</span> </a> <a href="#settings" class="menu-item" data-page="settings" style="display: flex; align-items: center; padding: 12px 24px; color: #94a3b8; text-decoration: none;"> <span style="margin-right: 12px; font-size: 20px;">⚙️</span> <span class="menu-text" style="font-size: 15px; font-weight: 500; transition: all 0.3s;">Settings</span> </a>
     </nav>
    </aside><!-- Main Content -->
    <main class="main-content" style="margin-left: 260px; width: calc(100% - 260px); padding: 32px;"><!-- Dashboard Page -->
@@ -551,9 +587,22 @@
       });
     });
 
+    // Desktop sidebar toggle
+    const sidebarToggle = document.getElementById('sidebarToggle');
+    const sidebar = document.getElementById('sidebar');
+    const mainContent = document.querySelector('.main-content');
+
+    if (sidebarToggle) {
+      sidebarToggle.addEventListener('click', () => {
+        sidebar.classList.toggle('collapsed');
+        if (mainContent) {
+          mainContent.classList.toggle('collapsed');
+        }
+      });
+    }
+
     // Mobile menu toggle
     const menuToggle = document.getElementById('menuToggle');
-    const sidebar = document.getElementById('sidebar');
     const overlay = document.getElementById('overlay');
 
     if (menuToggle) {
@@ -579,5 +628,5 @@
       });
     });
   </script>
- <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9a41c406f497a18a',t:'MTc2NDA4MDIwNi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9a456dc827737323',t:'MTc2NDExODYxNi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
